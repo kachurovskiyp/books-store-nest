@@ -1,0 +1,48 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Author {
+  id      String @unique @default(uuid())
+  name    String @unique
+  country String
+
+  books Book[]
+}
+
+model Book {
+  id        String   @unique @default(uuid())
+  title     String   @unique
+  rating    Int
+  price     Int
+
+  author    Author?  @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId  String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model User {
+  id       String    @id @default(uuid())
+  email    String    @unique
+  role     Role      @default(USER)
+  password Password?
+}
+
+model Password {
+  id       String @id @default(uuid())
+  hashedPassword String
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId   String @unique
+}
