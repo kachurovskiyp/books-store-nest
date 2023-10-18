@@ -61,4 +61,19 @@ export class BooksService {
 			}
 		});
 	}
+
+	public async like(likeData):Promise<Book> {
+		return await this.prismaService.book.update({
+			where: { id: likeData.bookId },
+			data: {
+				users: {
+					create: {
+						user: {
+							connect: { id: likeData.userId },
+						},
+					},
+				},
+			},
+		});
+	}
 }

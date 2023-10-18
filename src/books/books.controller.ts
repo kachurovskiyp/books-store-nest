@@ -12,6 +12,7 @@ import {
 import { BooksService } from './books.service';
 import { CreateBookDTO } from './dto/create-book.dto';
 import { UpdateBookDTO } from './dto/update-book.dto';
+import { LikeBookDTO } from './dto/like-book.dto';
 import { ParseUUIDPipe } from '@nestjs/common';
 import { Book } from '@prisma/client';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
@@ -58,5 +59,11 @@ export class BooksController {
 
 		await this.booksService.updateById(id, bookData);
 		return { success: true }
+	}
+
+	@Post('/like')
+	@UseGuards(JwtAuthGuard)
+	public like(@Body() likeData: LikeBookDTO) {
+		return this.booksService.like(likeData);
 	}
 }
